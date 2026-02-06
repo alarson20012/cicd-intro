@@ -38,6 +38,6 @@ jobs:
 
     - name: Deploy to 
       run: |
-        aws s3 sync . s3//${{ secrets.my-cicd-bucket-larsona }} -- exclude ".github/*" -- exclude "node_modules/*" -- exclude "package*.json" -- exclude "test.js"
+        aws s3 sync . s3//${{ secrets.my-cicd-bucket-larsona }} -- exclude ".github/*" -- exclude "node_modules/*" -- exclude "package*.json" -- exclude "test.js" -- exclude "README.md"
 
       
