@@ -36,6 +36,6 @@ on:
      aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
      aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Deploy to s3
-      run: | 
-       aws s3 sync . s3://${{ secrets.S3_BUCKET_NAME }} --exclude ".git*" --exclude ".github/*" --exclude "node_modules" --exclude "package*.json" --exclude "test.js"
+   - name: Deploy to s3
+     run: | 
+      aws s3 sync . s3://${{ secrets.S3_BUCKET_NAME }} --exclude ".git*" --exclude ".github/*" --exclude "node_modules" --exclude "package*.json" --exclude "test.js"
