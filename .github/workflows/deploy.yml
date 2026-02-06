@@ -1,0 +1,41 @@
+name: CI/CD Pipeline
+
+on:
+  push: 
+    branches: [ main ]
+  pull_request: 
+    branches: [ main ]
+
+jobs:
+  test: 
+    runs-on: ubuntu-latest
+    steps: 
+    - uses: actions/checkout@v3
+
+    name: Setup Node.js
+    uses: actions/setup-node@v3
+    with: 
+      node-verison: '18'
+
+  - name: Run tests
+    run: npm test
+
+  deploy: 
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps: 
+    - uses: actions/checkout@v3
+
+    - name: Configure AWS credentials 
+      uses: aws-actions/configure-aws-credentials@v2
+      with: 
+         aws-access-key-id: ${{secrets.ASIAVOY2XQDWLSQVNY3L}}
+         aws-secret-access-key: ${{secrets.jqbCYMQ6fTJWtHE3bkkE1KM+bwx+dTJpzzEjYWFF}}
+         aws-session-token: ${{secrets.IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJIMEYCIQDxXitkBVNcLpxg1evRDa4PiA/ySFEx6VC/1vY/u5YLfgIhAOK7WEVbD26zrUIe7aGAEkojSkwfuKE+ukjSA/zStMfCKqcCCEgQARoMMzc1MzI4ODMzNzcyIgyF4UasjwGWfOx2M1MqhAIhTkXA8cRnVD58oYbh//2jdo4hwpBwxHoS334K8H9eufty9H8ceClOIejQZ/wN8VWlZ8c/yE13t0Y2RzjQZNKeS/3SfAJiWLF1DyHaQ2yRahWBn4w5JqRcYJeGRe5clfRhhclU6hb8snjthqmslm3doBTnxofA9uFIyMzLtA6yRbdqDusKppoFCYqBubVVOzR9zFEqgUafE8AiX6axjVUwlYsW38n1G9YMfXAWI3jzbC1K8PUXbOymlKYNY4hWZ64fgNbOJBVH2s5YDLYwbDF0l1BJOwdShT6nLRjKFQ0HgM0E9xB50O/RbTApLAl8U0O3HRcl7wra6m+meh0YaW9e4ECZATCNhJjMBjqcAaZlWCQTCnNBCxJvBpKQxH1V62Ow3NWPNcKmzlwQImiBsFvARazivR0hfQm3nwj/WdmDJ6jXLjl9/M38lippfYpiyCjPxV757+xf0ZjDklWqkTVMOwZHmq/4SzdhOMyviYUun/UYdVlnWTCLdD8oI6/w2TCDBNcslUI7hbk/DuYkXxyjPs1hiK/4/dHCjOGFJnwRBOOA1QaMludv5g}}
+         aws-region: ${{secrets.us-east-1}}
+
+    - name: Deploy to 
+      run: |
+        aws s3 sync . s3//${{ secrets.my-cicd-bucket-larsona }} -- exclude ".github/*" -- exclude "node_modules/*" -- exclude "package*.json" -- exclude "test.js"
